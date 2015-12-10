@@ -49,11 +49,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage; 
 
 public class testfivehundredthirtytwo extends Application {
+	//set stage as window, initialize imageView, set Zoom properties
 	Stage window;
 	ImageView myImageView = new ImageView();
 	DoubleProperty zoomProperty = new SimpleDoubleProperty(200);
 	
-	//Abus
+	//initialized global variables
 	int rotation = 0;
 	int totalCounter=0;
 	int currentCounter = 0;
@@ -69,11 +70,15 @@ public class testfivehundredthirtytwo extends Application {
 	
 	final Label toplbl = new Label("Source");
 	Button sepiaTone = new Button("Apply Sepia");
+    Button darkButton = new Button("Darken Image");
+    Button blurButton = new Button("Blur Image");
+    Button brightButton = new Button("Brighten Image");
 	
    public static void main(String[] args) {
         launch(args);
     }
 
+	//start of program
     @Override
     public void start(Stage primaryStage) throws Exception {
         window = primaryStage;
@@ -83,10 +88,12 @@ public class testfivehundredthirtytwo extends Application {
         fxlbl.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
         navilbl.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
   
+	//file chooser for uploading images to scene
         FileChooser fileChooser = new FileChooser();
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(myImageView);
-
+	
+	//zoom property for scroll pane zooming
         zoomProperty.addListener(new InvalidationListener() {
             @Override
             public void invalidated(Observable arg0) {
@@ -106,15 +113,13 @@ public class testfivehundredthirtytwo extends Application {
             }
         });
 
-        //GridPane with 10px padding around edge
+        //initialize grid pane
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setVgap(8);
         grid.setHgap(10);
         
-        
-        
-        //Open file button
+        //Buttons and Grid location of initialized buttons
         GridPane.setConstraints(toplbl, 0, 0);
         toplbl.setAlignment(Pos.CENTER);
         Button fileButton = new Button("Open File");
@@ -128,11 +133,8 @@ public class testfivehundredthirtytwo extends Application {
         Button rotatoPotato = new Button("Rotato Potato");
         GridPane.setConstraints(rotatoPotato,0, 6);
         GridPane.setConstraints(sepiaTone,0, 7);
-        Button blurButton = new Button("Blur Image");
         GridPane.setConstraints(blurButton, 0, 8);
-        Button brightButton = new Button("Brighten Image");
         GridPane.setConstraints(brightButton, 0, 9);
-        Button darkButton = new Button("Darken Image");
         GridPane.setConstraints(darkButton, 0, 10);
         Button rightButton = new Button(">> Right >>");
         GridPane.setConstraints(navilbl, 0, 11);
@@ -143,6 +145,7 @@ public class testfivehundredthirtytwo extends Application {
         GridPane.setConstraints(lbl, 0, 16);
         lbl.setAlignment(Pos.CENTER);
         
+	//set uniform size of buttons
         fileButton.setMaxWidth(Double.MAX_VALUE);
         rotatoPotato.setMaxWidth(Double.MAX_VALUE);
         reflect.setMaxWidth(Double.MAX_VALUE);
@@ -158,6 +161,7 @@ public class testfivehundredthirtytwo extends Application {
         brightButton.setMaxWidth(Double.MAX_VALUE);
         darkButton.setMaxWidth(Double.MAX_VALUE);
         
+	//sepia tone button action
         sepiaTone.setOnAction(new EventHandler<ActionEvent>() {
          	 
             @Override
@@ -178,6 +182,7 @@ public class testfivehundredthirtytwo extends Application {
                  }           
             }});
         
+	//gaussian blur button action
         blurButton.setOnAction(new EventHandler<ActionEvent>() {
         public void handle(ActionEvent event) {
         	
@@ -195,13 +200,14 @@ public class testfivehundredthirtytwo extends Application {
            	darkButton.setText("Darken Image");
             }           
        }});
-       
+      
+	//increase brightness button action
         brightButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
             	
            	 if ("Brighten Image".equals(brightButton.getText())) {
            		ColorAdjust colorAdjust = new ColorAdjust();
-           		colorAdjust.setBrightness(+0.8);
+           		colorAdjust.setBrightness(+0.6);
            		myImageView.setEffect(colorAdjust);
            			brightButton.setText("Remove Effects");
                 	blurButton.setText("Remove Effects");
@@ -216,12 +222,13 @@ public class testfivehundredthirtytwo extends Application {
                 }           
            }});
         
+	//decrease brightness button action
         darkButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
             	
            	 if ("Darken Image".equals(darkButton.getText())) {
            		ColorAdjust colorAdjust = new ColorAdjust();
-           		colorAdjust.setBrightness(-0.8);
+           		colorAdjust.setBrightness(-0.4);
            		myImageView.setEffect(colorAdjust);
            			brightButton.setText("Remove Effects");
                 	blurButton.setText("Remove Effects");
@@ -237,15 +244,17 @@ public class testfivehundredthirtytwo extends Application {
                 }           
            }});
         
-       
+	//rotate image button action
         rotatoPotato.setOnAction(new EventHandler<ActionEvent>() {
           	 
             @Override
             public void handle(ActionEvent event) {
+		//rotate function
               rotate();
               
             }});
         
+	//right navigation button
         	rightButton.setOnAction(new EventHandler<ActionEvent>() {
           	 
             @Override
@@ -253,7 +262,7 @@ public class testfivehundredthirtytwo extends Application {
             	nextButton();
               
             }});
-        	
+        //left navigation button
         	leftButton.setOnAction(new EventHandler<ActionEvent>() {
              	 
                 @Override
@@ -261,7 +270,8 @@ public class testfivehundredthirtytwo extends Application {
                 	previousButton();
                   
                 }});
-        
+
+        //open file button
         fileButton.setOnAction(new EventHandler<ActionEvent>() {
        	 
             @Override
@@ -269,16 +279,18 @@ public class testfivehundredthirtytwo extends Application {
               openFile();
               
             }});
- 
+ 	
+	//reflect button action
         reflect.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent actionEvent) {
                myImageView.setRotationAxis(Rotate.Y_AXIS);
                degreevalue +=180;
                myImageView.setRotate(degreevalue);
-//              
+             
             }
         });
       
+	//save images button action
        saveButton.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
@@ -300,6 +312,8 @@ public class testfivehundredthirtytwo extends Application {
                 }
             }
         });
+
+	//initialize Menu items and Menu
        MenuItem menuItem2 = new MenuItem("Features");
        menuItem2.setOnAction(new EventHandler<ActionEvent>() {
            @Override public void handle(ActionEvent e) {
@@ -316,6 +330,8 @@ public class testfivehundredthirtytwo extends Application {
                dialog.show();
            }
        });
+
+	// initialize Menu tems
        MenuItem menuItem3 = new MenuItem("About");
        menuItem3.setOnAction(new EventHandler<ActionEvent>() {
            @Override public void handle(ActionEvent e) {
@@ -335,49 +351,64 @@ public class testfivehundredthirtytwo extends Application {
            }
        });
        
+	//Initialize Menu item open file
         MenuItem menuItem = new MenuItem("Open Image");
         menuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
+		//Upload image on scene function
             	openFile();
             }
         });
+	
+	//Initialilze Menu item close files
         MenuItem menuItem1 = new MenuItem("Close");
         menuItem1.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
                 close();
             }
         });
+	
+	//set Menu and Menu Items
         final Menu menu1 = new Menu("File");
         menu1.getItems().addAll(menuItem, menuItem1);
         final Menu menu2 = new Menu("Options");
         final Menu menu3 = new Menu("Help");
         menu3.getItems().addAll(menuItem2, menuItem3);
         
+	//Add Menubar
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().addAll(menu1, menu2, menu3);
         
+	//View Image horizontal box
         HBox imageBox = new HBox();
         imageBox.getChildren().addAll(myImageView,scrollPane); 
         scrollPane.setMinWidth(2000);
         
+
+	//Initialize border pane
         BorderPane borderPane = new BorderPane();
+
         //Adds everything to grid
         grid.getChildren().addAll(fxlbl,toplbl,lbl, sepiaTone, navilbl, darkButton, fileButton,reflect, rotatoPotato, saveButton, rightButton, leftButton, blurButton, brightButton);
-        borderPane.setTop(menuBar);
+        
+	//position border pane items
+	borderPane.setTop(menuBar);
     	borderPane.setLeft(grid);
     	borderPane.setCenter(imageBox);
     	
-        
+	//set scene with borderPane
         Scene scene = new Scene(borderPane, 720, 540);
         scene.getStylesheets().add("viper.css");
         window.setScene(scene);
         window.show();
     }
-
+	
+	//close application function
     public void close(){
 	Platform.exit();	
     }
 
+	//rotate application function
     public void rotate()
         {	
     		
@@ -385,7 +416,8 @@ public class testfivehundredthirtytwo extends Application {
         	degreevalue += 90;
         	myImageView.setRotate(degreevalue);
         }
-    
+
+   	//open Image to scene application function
     public void openFile() {
 		
 		
@@ -433,6 +465,8 @@ public class testfivehundredthirtytwo extends Application {
 			System.out.println("Cannot show image");
 		}	
 	}
+
+	//right button navigation function
     public void nextButton(){
 		if(imageCounter+1<totalCounter){
 		myImageView.setRotate(0);
@@ -441,21 +475,34 @@ public class testfivehundredthirtytwo extends Application {
 		String x = Integer.toString(imageCounter+1);
 		lbl.setText("Image number: " + x);
 		myImageView.setEffect(null);
+		
+		//reset effects
 		sepiaTone.setText("Apply Sepia");
+               	blurButton.setText("Blur Image");
+               	brightButton.setText("Brighten Image");
+               	darkButton.setText("Darken Image");		
+
 		}
 		else{
 			System.out.println("No next picture!");
 			
 		}
 	}
-    
+
+	//close application function
     public void previousButton(){
 		if(imageCounter-1>=0){
 		myImageView.setRotate(0);
 		myImageView.setEffect(null);
 		myImageView.setImage(images[--imageCounter]);
 		System.out.println(imageCounter);
+		
+		//reset effects
 		sepiaTone.setText("Apply Sepia");
+               	blurButton.setText("Blur Image");
+               	brightButton.setText("Brighten Image");
+               	darkButton.setText("Darken Image");		
+
 		String x = Integer.toString(imageCounter+1);
 		lbl.setText("Image number: " + x);
 		}
